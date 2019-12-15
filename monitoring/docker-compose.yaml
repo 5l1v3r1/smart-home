@@ -1,0 +1,22 @@
+version: '3'
+services:
+  grafana:
+      image: grafana/grafana
+      volumes:
+        - ./grafana.ini:/etc/grafana/grafana.ini
+  prometheus:
+      image: prom/prometheus
+      volumes:
+        - ./prometheus.yml:/etc/prometheus/config.yml
+      command:
+        - "--config.file=/etc/prometheus/config.yml"
+        - "--web.external-url=http://sadegh-raspi.local/prometheus"
+        - "--web.route-prefix='/'"
+  nginx:
+      image: nginx
+      ports:
+        - 80:80
+      volumes:
+        - ./htpasswd:/etc/nginx/.htpasswd
+        - ./:/usr/share/nginx/html
+        - ./nginx.conf:/etc/nginx/conf.d/default.conf
